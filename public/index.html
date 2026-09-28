@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskFlow — MERN Backend & API Explorer</title>
+  <title>TaskFlow — Artisan Task Manager</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,16 +14,16 @@
     <!-- Header -->
     <header class="navbar">
       <div class="brand">
-        <div class="logo-icon">⚡</div>
+        <div class="logo-icon">🌿</div>
         <div>
-          <h1>TaskFlow API</h1>
-          <p class="subtitle">MERN Stack Backend Application</p>
+          <h1>TaskFlow</h1>
+          <p class="subtitle">Artisan Task &amp; Project Manager</p>
         </div>
       </div>
       <div class="header-badges">
         <div class="status-badge" id="server-status">
           <span class="status-dot"></span>
-          <span id="server-status-text">Checking API...</span>
+          <span id="server-status-text">Connecting...</span>
         </div>
         <div class="status-badge db-badge" id="db-status">
           <span class="db-icon">🗄️</span>
@@ -54,7 +54,7 @@
 
     <!-- Main Workspace Grid -->
     <main class="main-content">
-      <!-- Left Column: Add Task & Endpoints Guide -->
+      <!-- Left Column: Add Task Form -->
       <aside class="sidebar-col">
         <!-- Create Task Card -->
         <div class="card form-card">
@@ -62,7 +62,7 @@
           <form id="create-task-form">
             <div class="form-group">
               <label for="task-title">Title *</label>
-              <input type="text" id="task-title" placeholder="e.g. Set up production database" required maxlength="120">
+              <input type="text" id="task-title" placeholder="e.g. Design homepage layout" required maxlength="120">
             </div>
 
             <div class="form-group">
@@ -100,43 +100,9 @@
             </button>
           </form>
         </div>
-
-        <!-- API Quick Reference -->
-        <div class="card api-docs-card">
-          <h2 class="card-title">REST API Endpoints</h2>
-          <div class="api-list">
-            <div class="api-item">
-              <span class="method get">GET</span>
-              <code>/health</code>
-              <button class="btn-xs" onclick="testEndpoint('/health')">Test</button>
-            </div>
-            <div class="api-item">
-              <span class="method get">GET</span>
-              <code>/api/tasks</code>
-              <button class="btn-xs" onclick="testEndpoint('/api/tasks')">Test</button>
-            </div>
-            <div class="api-item">
-              <span class="method get">GET</span>
-              <code>/api/tasks/stats/summary</code>
-              <button class="btn-xs" onclick="testEndpoint('/api/tasks/stats/summary')">Test</button>
-            </div>
-            <div class="api-item">
-              <span class="method post">POST</span>
-              <code>/api/tasks</code>
-            </div>
-            <div class="api-item">
-              <span class="method put">PUT</span>
-              <code>/api/tasks/:id</code>
-            </div>
-            <div class="api-item">
-              <span class="method delete">DELETE</span>
-              <code>/api/tasks/:id</code>
-            </div>
-          </div>
-        </div>
       </aside>
 
-      <!-- Right Column: Task List & Live API Response -->
+      <!-- Right Column: Task List -->
       <section class="task-col">
         <!-- Controls Bar -->
         <div class="controls-card card">
@@ -153,16 +119,7 @@
 
         <!-- Tasks Container -->
         <div class="tasks-list" id="tasks-list">
-          <div class="loading-state">Loading tasks from API...</div>
-        </div>
-
-        <!-- Live JSON Console Modal / Card -->
-        <div class="card json-viewer-card" id="json-viewer-card" style="display:none;">
-          <div class="json-header">
-            <span class="json-title" id="json-endpoint-label">API Response</span>
-            <button class="btn-xs" onclick="document.getElementById('json-viewer-card').style.display='none'">Close</button>
-          </div>
-          <pre><code id="json-output"></code></pre>
+          <div class="loading-state">Loading your tasks...</div>
         </div>
       </section>
     </main>

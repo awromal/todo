@@ -58,26 +58,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Documentation / Directory
-app.get('/api', (req, res) => {
-  res.status(200).json({
-    service: 'TaskFlow MERN REST API',
-    version: '1.0.0',
-    documentation: {
-      health: 'GET /health',
-      tasks: {
-        list: 'GET /api/tasks (query: ?status=todo|in-progress|completed&priority=low|medium|high&search=keyword)',
-        create: 'POST /api/tasks (body: { title, description?, status?, priority?, dueDate? })',
-        getById: 'GET /api/tasks/:id',
-        update: 'PUT /api/tasks/:id (body: partial or complete task fields)',
-        delete: 'DELETE /api/tasks/:id',
-        summaryStats: 'GET /api/tasks/stats/summary',
-      },
-    },
-  });
-});
-
-// API Routes
+// Task Routes (mounted on /tasks, with /api/tasks alias for compatibility)
+app.use('/tasks', taskRoutes);
 app.use('/api/tasks', taskRoutes);
 
 // Catch 404 and forward to error handler

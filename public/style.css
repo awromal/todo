@@ -304,49 +304,6 @@ body {
   color: var(--text-primary);
 }
 
-/* API list */
-.api-docs-card {
-  margin-top: 24px;
-}
-
-.api-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.api-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 8px 12px;
-  background: var(--bg-surface-soft);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  border: 1px solid #ebe5dd;
-}
-
-.api-item code {
-  font-family: var(--font-mono);
-  color: #4a443f;
-  font-size: 12px;
-  flex-grow: 1;
-}
-
-.method {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 7px;
-  border-radius: 4px;
-}
-
-.method.get { background: var(--secondary-tint); color: var(--secondary); }
-.method.post { background: var(--primary-tint); color: #9f402d; }
-.method.put { background: var(--warning-tint); color: #b45309; }
-.method.delete { background: var(--danger-tint); color: var(--danger); }
-
 /* Task Column */
 .controls-card {
   display: flex;
@@ -523,35 +480,6 @@ body {
   border: 1px dashed var(--border);
   border-radius: var(--radius-lg);
   color: var(--text-secondary);
-}
-
-/* JSON Viewer */
-.json-viewer-card {
-  margin-top: 20px;
-  background: #232220;
-  border-color: #3b3936;
-}
-
-.json-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.json-title {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: #e2725b;
-}
-
-.json-viewer-card pre {
-  max-height: 280px;
-  overflow: auto;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.5;
-  color: #f7f4f0;
 }
 
 /* Footer */

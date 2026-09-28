@@ -14,9 +14,6 @@ const statTotal = document.getElementById('stat-total');
 const statProgress = document.getElementById('stat-progress');
 const statCompleted = document.getElementById('stat-completed');
 const statHigh = document.getElementById('stat-high');
-const jsonViewer = document.getElementById('json-viewer-card');
-const jsonOutput = document.getElementById('json-output');
-const jsonEndpointLabel = document.getElementById('json-endpoint-label');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,12 +49,12 @@ async function checkHealth() {
 
     if (data.status === 'healthy') {
       serverStatusDot.classList.add('online');
-      serverStatusText.textContent = `Online (${data.uptimeSeconds}s)`;
+      serverStatusText.textContent = `Online`;
 
       if (data.database.status === 'connected') {
-        dbStatusText.textContent = `MongoDB: Connected (${data.database.name})`;
+        dbStatusText.textContent = `MongoDB: Connected`;
       } else {
-        dbStatusText.textContent = `MongoDB: Fallback (In-Memory)`;
+        dbStatusText.textContent = `Storage: Active`;
       }
     }
   } catch (err) {
@@ -70,7 +67,7 @@ async function checkHealth() {
 // Fetch Aggregated Stats
 async function loadStats() {
   try {
-    const res = await fetch('/api/tasks/stats/summary');
+    const res = await fetch('/tasks/stats/summary');
     const json = await res.json();
     if (json.success) {
       statTotal.textContent = json.data.total;
@@ -86,7 +83,7 @@ async function loadStats() {
 // Fetch Tasks
 async function loadTasks() {
   try {
-    let url = '/api/tasks?';
+    let url = '/tasks?';
     if (currentFilter) url += `status=${encodeURIComponent(currentFilter)}&`;
     if (currentSearch) url += `search=${encodeURIComponent(currentSearch)}&`;
 
@@ -160,7 +157,7 @@ async function handleCreateTask(e) {
   };
 
   try {
-    const res = await fetch('/api/tasks', {
+    const res = await fetch('/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -171,7 +168,6 @@ async function handleCreateTask(e) {
       createForm.reset();
       loadTasks();
       loadStats();
-      showJson('/api/tasks (POST)', json);
     } else {
       alert(`Error creating task: ${json.error || 'Unknown error'}`);
     }
@@ -190,17 +186,15 @@ async function cycleStatus(id, currentStatus) {
   else if (currentStatus === 'completed') nextStatus = 'todo';
 
   try {
-    const res = await fetch(`/api/tasks/${id}`, {
+    const res = await fetch(`/tasks/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: nextStatus }),
     });
 
-    const json = await res.json();
     if (res.ok) {
       loadTasks();
       loadStats();
-      showJson(`/api/tasks/${id} (PUT)`, json);
     }
   } catch (err) {
     console.error(err);
@@ -212,37 +206,17 @@ async function deleteTask(id) {
   if (!confirm('Are you sure you want to delete this task?')) return;
 
   try {
-    const res = await fetch(`/api/tasks/${id}`, {
+    const res = await fetch(`/tasks/${id}`, {
       method: 'DELETE',
     });
 
-    const json = await res.json();
     if (res.ok) {
       loadTasks();
       loadStats();
-      showJson(`/api/tasks/${id} (DELETE)`, json);
     }
   } catch (err) {
     console.error(err);
   }
-}
-
-// Interactive Endpoint Testing
-async function testEndpoint(endpoint) {
-  try {
-    const res = await fetch(endpoint);
-    const json = await res.json();
-    showJson(endpoint, json);
-  } catch (err) {
-    showJson(endpoint, { error: err.message });
-  }
-}
-
-function showJson(title, data) {
-  jsonEndpointLabel.textContent = `Response: ${title}`;
-  jsonOutput.textContent = JSON.stringify(data, null, 2);
-  jsonViewer.style.display = 'block';
-  jsonViewer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function escapeHtml(str) {

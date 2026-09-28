@@ -5,7 +5,7 @@ const app = require('../src/app');
 let server;
 let baseUrl;
 
-describe('TaskFlow MERN Backend API Tests', () => {
+describe('TaskFlow MERN Backend Tests', () => {
   before(async () => {
     await new Promise((resolve) => {
       server = app.listen(0, () => {
@@ -28,25 +28,17 @@ describe('TaskFlow MERN Backend API Tests', () => {
     assert.ok(json.database);
   });
 
-  test('GET /api returns service documentation schema', async () => {
-    const res = await fetch(`${baseUrl}/api`);
-    assert.strictEqual(res.status, 200);
-    const json = await res.json();
-    assert.strictEqual(json.service, 'TaskFlow MERN REST API');
-    assert.ok(json.documentation);
-  });
-
-  test('GET /api/tasks returns initial list of tasks', async () => {
-    const res = await fetch(`${baseUrl}/api/tasks`);
+  test('GET /tasks returns initial list of tasks', async () => {
+    const res = await fetch(`${baseUrl}/tasks`);
     assert.strictEqual(res.status, 200);
     const json = await res.json();
     assert.strictEqual(json.success, true);
     assert.ok(Array.isArray(json.data));
   });
 
-  test('POST /api/tasks creates a task with validation', async () => {
+  test('POST /tasks creates a task with validation', async () => {
     // Missing title should fail
-    const badRes = await fetch(`${baseUrl}/api/tasks`, {
+    const badRes = await fetch(`${baseUrl}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ description: 'No title' }),
@@ -54,7 +46,7 @@ describe('TaskFlow MERN Backend API Tests', () => {
     assert.strictEqual(badRes.status, 400);
 
     // Valid task creation
-    const goodRes = await fetch(`${baseUrl}/api/tasks`, {
+    const goodRes = await fetch(`${baseUrl}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -70,15 +62,15 @@ describe('TaskFlow MERN Backend API Tests', () => {
     assert.strictEqual(json.data.title, 'Automated Test Task');
     assert.strictEqual(json.data.priority, 'high');
 
-    // Verify GET /api/tasks/:id
+    // Verify GET /tasks/:id
     const id = json.data._id;
-    const getRes = await fetch(`${baseUrl}/api/tasks/${id}`);
+    const getRes = await fetch(`${baseUrl}/tasks/${id}`);
     assert.strictEqual(getRes.status, 200);
     const getJson = await getRes.json();
     assert.strictEqual(getJson.data._id, id);
 
-    // Verify PUT /api/tasks/:id
-    const putRes = await fetch(`${baseUrl}/api/tasks/${id}`, {
+    // Verify PUT /tasks/:id
+    const putRes = await fetch(`${baseUrl}/tasks/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: 'completed' }),
@@ -87,19 +79,19 @@ describe('TaskFlow MERN Backend API Tests', () => {
     const putJson = await putRes.json();
     assert.strictEqual(putJson.data.status, 'completed');
 
-    // Verify DELETE /api/tasks/:id
-    const delRes = await fetch(`${baseUrl}/api/tasks/${id}`, {
+    // Verify DELETE /tasks/:id
+    const delRes = await fetch(`${baseUrl}/tasks/${id}`, {
       method: 'DELETE',
     });
     assert.strictEqual(delRes.status, 200);
 
     // Verify 404 after deletion
-    const notFoundRes = await fetch(`${baseUrl}/api/tasks/${id}`);
+    const notFoundRes = await fetch(`${baseUrl}/tasks/${id}`);
     assert.strictEqual(notFoundRes.status, 404);
   });
 
-  test('GET /api/tasks/stats/summary returns metric counters', async () => {
-    const res = await fetch(`${baseUrl}/api/tasks/stats/summary`);
+  test('GET /tasks/stats/summary returns metric counters', async () => {
+    const res = await fetch(`${baseUrl}/tasks/stats/summary`);
     assert.strictEqual(res.status, 200);
     const json = await res.json();
     assert.strictEqual(json.success, true);
