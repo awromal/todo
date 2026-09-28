@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(120)
+  description String?   @default("")
+  status      String    @default("todo") @db.VarChar(20)
+  priority    String    @default("medium") @db.VarChar(20)
+  dueDate     DateTime? @map("due_date") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([status, priority, createdAt(sort: Desc)])
+  @@map("tasks")
+}
