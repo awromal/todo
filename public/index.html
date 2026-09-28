@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — MERN Backend & API Explorer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <h1>TaskFlow API</h1>
+          <p class="subtitle">MERN Stack Backend Application</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <div class="status-badge" id="server-status">
+          <span class="status-dot"></span>
+          <span id="server-status-text">Checking API...</span>
+        </div>
+        <div class="status-badge db-badge" id="db-status">
+          <span class="db-icon">🗄️</span>
+          <span id="db-status-text">Database Checking...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Overview -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Tasks</span>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">In Progress</span>
+        <span class="stat-value text-warning" id="stat-progress">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Completed</span>
+        <span class="stat-value text-success" id="stat-completed">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">High Priority</span>
+        <span class="stat-value text-danger" id="stat-high">0</span>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-content">
+      <!-- Left Column: Add Task & Endpoints Guide -->
+      <aside class="sidebar-col">
+        <!-- Create Task Card -->
+        <div class="card form-card">
+          <h2 class="card-title">Create New Task</h2>
+          <form id="create-task-form">
+            <div class="form-group">
+              <label for="task-title">Title *</label>
+              <input type="text" id="task-title" placeholder="e.g. Set up production database" required maxlength="120">
+            </div>
+
+            <div class="form-group">
+              <label for="task-desc">Description</label>
+              <textarea id="task-desc" rows="3" placeholder="Brief details about this task..." maxlength="500"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="task-priority">Priority</label>
+                <select id="task-priority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="task-status">Status</label>
+                <select id="task-status">
+                  <option value="todo" selected>To Do</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="task-due">Due Date</label>
+              <input type="date" id="task-due">
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-submit">
+              <span>Add Task</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- API Quick Reference -->
+        <div class="card api-docs-card">
+          <h2 class="card-title">REST API Endpoints</h2>
+          <div class="api-list">
+            <div class="api-item">
+              <span class="method get">GET</span>
+              <code>/health</code>
+              <button class="btn-xs" onclick="testEndpoint('/health')">Test</button>
+            </div>
+            <div class="api-item">
+              <span class="method get">GET</span>
+              <code>/api/tasks</code>
+              <button class="btn-xs" onclick="testEndpoint('/api/tasks')">Test</button>
+            </div>
+            <div class="api-item">
+              <span class="method get">GET</span>
+              <code>/api/tasks/stats/summary</code>
+              <button class="btn-xs" onclick="testEndpoint('/api/tasks/stats/summary')">Test</button>
+            </div>
+            <div class="api-item">
+              <span class="method post">POST</span>
+              <code>/api/tasks</code>
+            </div>
+            <div class="api-item">
+              <span class="method put">PUT</span>
+              <code>/api/tasks/:id</code>
+            </div>
+            <div class="api-item">
+              <span class="method delete">DELETE</span>
+              <code>/api/tasks/:id</code>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Task List & Live API Response -->
+      <section class="task-col">
+        <!-- Controls Bar -->
+        <div class="controls-card card">
+          <div class="filter-pills" id="filter-pills">
+            <button class="pill active" data-filter="">All</button>
+            <button class="pill" data-filter="todo">To Do</button>
+            <button class="pill" data-filter="in-progress">In Progress</button>
+            <button class="pill" data-filter="completed">Completed</button>
+          </div>
+          <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search tasks...">
+          </div>
+        </div>
+
+        <!-- Tasks Container -->
+        <div class="tasks-list" id="tasks-list">
+          <div class="loading-state">Loading tasks from API...</div>
+        </div>
+
+        <!-- Live JSON Console Modal / Card -->
+        <div class="card json-viewer-card" id="json-viewer-card" style="display:none;">
+          <div class="json-header">
+            <span class="json-title" id="json-endpoint-label">API Response</span>
+            <button class="btn-xs" onclick="document.getElementById('json-viewer-card').style.display='none'">Close</button>
+          </div>
+          <pre><code id="json-output"></code></pre>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>TaskFlow MERN Stack Application &bull; Built with Node.js, Express &amp; MongoDB &bull; Production Ready</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
