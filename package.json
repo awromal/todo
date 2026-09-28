@@ -1,7 +1,7 @@
 {
   "name": "taskflow-mern-backend",
   "version": "1.0.0",
-  "description": "A production-ready MERN backend REST API for Task Management with live dashboard and deployment configs",
+  "description": "A production-ready PERN backend REST API for Task Management with PostgreSQL",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -9,11 +9,10 @@
     "test": "node --test"
   },
   "keywords": [
-    "mern",
+    "pern",
+    "postgresql",
     "backend",
     "express",
-    "mongodb",
-    "mongoose",
     "rest-api"
   ],
   "author": "TaskFlow",
@@ -25,6 +24,7 @@
     "express": "^5.2.1",
     "helmet": "^8.3.0",
     "mongoose": "^9.10.2",
-    "morgan": "^1.12.1"
+    "morgan": "^1.12.1",
+    "pg": "^8.23.0"
   }
 }

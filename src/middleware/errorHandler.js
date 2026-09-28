@@ -10,6 +10,18 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message || 'Internal Server Error';
 
+  // Handle PostgreSQL Error Codes
+  if (err.code === '22P02') {
+    statusCode = 400;
+    message = 'Invalid input syntax for parameter (e.g. invalid integer ID)';
+  } else if (err.code === '23505') {
+    statusCode = 400;
+    message = 'Unique constraint violation: record already exists';
+  } else if (err.code === '23502') {
+    statusCode = 400;
+    message = `Missing required field: ${err.column || 'not-null constraint violated'}`;
+  }
+
   // Handle Mongoose Bad ObjectId (CastError)
   if (err.name === 'CastError') {
     statusCode = 400;
@@ -22,12 +34,6 @@ const errorHandler = (err, req, res, next) => {
     message = Object.values(err.errors)
       .map((val) => val.message)
       .join(', ');
-  }
-
-  // Handle Mongoose Duplicate Key Error
-  if (err.code === 11000) {
-    statusCode = 400;
-    message = 'Duplicate field value entered';
   }
 
   res.status(statusCode).json({

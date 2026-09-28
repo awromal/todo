@@ -52,9 +52,9 @@ async function checkHealth() {
       serverStatusText.textContent = `Online`;
 
       if (data.database.status === 'connected') {
-        dbStatusText.textContent = `MongoDB: Connected`;
+        dbStatusText.textContent = `PostgreSQL: Connected`;
       } else {
-        dbStatusText.textContent = `Storage: Active`;
+        dbStatusText.textContent = `PostgreSQL: Active (In-Memory)`;
       }
     }
   } catch (err) {
